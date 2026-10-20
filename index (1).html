@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foodel · फूडल — Food Delivery All Over India</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--org:#f2762e;--grn:#1b7a43;--dark:#232323;--cream:#fff9f2;--gold:#ffb627}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--cream);color:#2c2c2c}
+nav{position:sticky;top:0;z-index:50;background:#fff;display:flex;align-items:center;gap:16px;padding:12px 20px;box-shadow:0 2px 10px rgba(0,0,0,.08);flex-wrap:wrap}
+.logo{font-size:26px;font-weight:800;color:var(--org)}
+nav a{color:#444;text-decoration:none;font-weight:600;font-size:15px}
+.langbtn{background:#f0ece2;border:none;border-radius:18px;padding:8px 14px;font-weight:700;cursor:pointer;font-size:14px}
+.navbtn{margin-left:auto;background:var(--org);color:#fff;border:none;border-radius:24px;padding:10px 22px;font-weight:700;font-size:15px;cursor:pointer}
+.hero{background:linear-gradient(135deg,#f2762e 0%,#d95f16 60%,#b34c0e 100%);color:#fff;padding:52px 20px;text-align:center}
+.hero h1{font-size:42px;margin-bottom:8px}
+.hero p{font-size:18px;opacity:.94;margin-bottom:22px}
+.citypick{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
+.citypick select{padding:13px 18px;border-radius:28px;border:none;font-size:16px;font-weight:600;min-width:260px}
+.cta{background:#fff;color:var(--org);border:none;border-radius:28px;padding:14px 34px;font-size:17px;font-weight:800;cursor:pointer}
+.stats{display:flex;gap:28px;justify-content:center;margin-top:28px;flex-wrap:wrap}
+.stat b{font-size:26px;display:block}.stat span{font-size:13px;opacity:.9}
+section{padding:44px 20px;max-width:1100px;margin:0 auto}
+h2.sec{font-size:29px;margin-bottom:6px}p.secsub{color:#777;margin-bottom:22px;font-size:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:18px}
+.card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.08)}
+.card img{width:100%;height:150px;object-fit:cover}
+.card .pad{padding:16px}.card h3{font-size:18px;margin-bottom:4px}.card .meta{font-size:13px;color:#888;margin-bottom:8px}
+.tag{display:inline-block;font-size:12px;font-weight:700;border-radius:10px;padding:3px 10px;margin:2px 4px 2px 0}
+.tag.g{background:#e8f5e9;color:var(--grn)}.tag.o{background:#fff3e6;color:var(--org)}.tag.b{background:#e3f2fd;color:#1565c0}
+.btn{background:var(--org);color:#fff;border:none;border-radius:20px;padding:10px 22px;font-weight:700;cursor:pointer;font-size:15px}
+.btn.ghost{background:#fff;color:var(--grn);border:2px solid var(--grn)}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;align-items:center;justify-content:center;padding:16px}
+.modal.show{display:flex}
+.sheet{background:#fff;border-radius:20px;max-width:520px;width:100%;max-height:88vh;overflow:auto;padding:26px}
+.sheet h3{margin-bottom:14px;font-size:22px}
+.sheet label{font-weight:700;font-size:14px;display:block;margin:12px 0 6px}
+.sheet input,.sheet select{width:100%;padding:12px 15px;border:2px solid #e5e0d5;border-radius:12px;font-size:16px}
+.mitem{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #f0ece2}
+.mitem .nm b{display:block}.mitem .nm span{font-size:13px;color:#888}
+.mitem .pr{font-weight:800;color:var(--grn);margin-right:10px}
+.add{background:var(--grn);color:#fff;border:none;border-radius:16px;padding:7px 16px;font-weight:700;cursor:pointer}
+#cartbar{position:fixed;bottom:16px;right:16px;background:var(--dark);color:#fff;border-radius:30px;padding:14px 26px;font-weight:700;cursor:pointer;display:none;z-index:90}
+#cartbar.show{display:block}
+.demo{background:#fff8e1;border:1px solid #ffe082;border-radius:10px;padding:10px 14px;font-size:13px;color:#8a6d00;margin:12px 0;text-align:center}
+.otpbox{background:#f0f7f1;border-radius:12px;padding:16px;text-align:center;margin:12px 0}
+.otpbox b{font-size:34px;letter-spacing:8px;color:var(--grn)}
+.okmsg{background:#e8f5e9;border:2px solid var(--grn);border-radius:12px;padding:14px;margin-top:12px;display:none}
+.okmsg.show{display:block}
+.citygrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.cityc{background:#fff;border-radius:14px;padding:18px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.07);cursor:pointer;border:2px solid transparent}
+.cityc:hover{border-color:var(--org)}
+.cityc b{font-size:17px}.cityc span{font-size:12px;color:#888;display:block}
+.plus{background:linear-gradient(135deg,#232323,#4a2c10);color:#fff;border-radius:22px;padding:36px;text-align:center}
+.plus h2{color:var(--gold);font-size:28px;margin-bottom:10px}
+.plus ul{list-style:none;margin:16px 0}.plus li{margin:8px 0;font-size:16px}
+.safety{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.sbox{background:#fff;border-radius:16px;padding:22px;box-shadow:0 3px 12px rgba(0,0,0,.07);text-align:center}
+footer{background:var(--dark);color:#ccc;padding:36px 20px;text-align:center;margin-top:40px}
+.catstrip{display:flex;gap:14px;overflow-x:auto;padding:8px 2px 14px;margin-bottom:4px}
+.cat{min-width:78px;text-align:center;cursor:pointer;flex-shrink:0}
+.cat .e{font-size:32px;background:#fff;border-radius:50%;width:64px;height:64px;display:flex;align-items:center;justify-content:center;margin:0 auto 6px;box-shadow:0 2px 8px rgba(0,0,0,.08);border:3px solid transparent}
+.cat.sel .e{border-color:var(--org)}
+.cat span{font-size:12px;font-weight:700}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.chip{background:#fff;border:2px solid #e5e0d5;border-radius:20px;padding:8px 16px;font-size:14px;font-weight:600;cursor:pointer}
+.chip.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+.searchbar{width:100%;padding:13px 18px;border:2px solid #e5e0d5;border-radius:28px;font-size:16px;margin-bottom:14px}
+.spons{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;border-radius:8px;padding:3px 8px}
+.card{position:relative}
+.hrow{display:flex;gap:14px;overflow-x:auto;padding:6px 2px 16px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.hcard{min-width:252px;max-width:252px;scroll-snap-align:start;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 3px 12px rgba(0,0,0,.08);position:relative;cursor:pointer}
+.hcard img{width:100%;height:130px;object-fit:cover}
+.hcard .pad{padding:12px}.hcard h4{font-size:16px;margin-bottom:3px}.hcard .meta{font-size:13px;color:#888}
+.heart{position:absolute;top:8px;right:8px;background:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;border:none;box-shadow:0 2px 6px rgba(0,0,0,.25);z-index:2}
+.offbadge{position:absolute;top:8px;left:8px;background:#ffd54f;color:#232323;font-weight:800;font-size:12px;border-radius:10px;padding:4px 10px;z-index:2}
+.offcard{min-width:215px;max-width:215px;background:#fff;border:2px solid #ffe082;border-radius:16px;padding:18px;scroll-snap-align:start;box-shadow:0 3px 12px rgba(0,0,0,.06)}
+.offcard b{font-size:19px;display:block;margin-bottom:4px}
+.offcard span{font-size:13px;color:#777}
+.rowtitle{font-size:21px;margin:20px 0 4px}
+.tracktabs{display:flex;gap:8px;margin-bottom:12px}
+.ttab{flex:1;padding:10px;border-radius:12px;border:2px solid #e5e0d5;background:#fff;font-weight:700;cursor:pointer;font-size:15px}
+.ttab.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+#trackmap{width:100%;border-radius:14px;background:#eaf3e6;display:block}
+.steps{display:flex;justify-content:space-between;margin:14px 0}
+.step{text-align:center;font-size:11px;flex:1;color:#999}
+.step .d{width:30px;height:30px;border-radius:50%;background:#ddd;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:14px;color:#666}
+.step.done{color:var(--grn)}.step.done .d{background:var(--grn);color:#fff}
+.step.now{color:var(--org)}.step.now .d{background:var(--org);color:#fff;animation:pulse 1s infinite}
+@keyframes pulse{50%{transform:scale(1.2)}}
+.infocard{background:#f7f4ec;border-radius:12px;padding:12px 14px;margin-top:10px;font-size:14px}
+.pcard{background:#fff;border-radius:16px;padding:16px 18px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.pcard b{display:block;font-size:16px;margin-bottom:4px}.pcard span{color:#777;font-size:14px}
+.faq{background:#fff;border-radius:12px;margin-bottom:8px;overflow:hidden}
+.faq summary{padding:14px 18px;font-weight:700;cursor:pointer;font-size:15px}
+.faq p{padding:0 18px 14px;color:#666;font-size:14px;margin:0}
+#support .faq{background:#1a1a1a}#support .faq summary{color:#fff}#support .faq p{color:#bbb}
+@media(max-width:640px){.hero h1{font-size:32px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">🍛 Foodel</div>
+  <a href="#order" data-en="Order Food" data-hi="खाना मंगवाओ">Order Food</a>
+  <a href="#partner" data-en="Deliver" data-hi="डिलीवरी करो">Deliver</a>
+  <a href="#restaurant" data-en="Add Restaurant" data-hi="रेस्टोरेंट जोड़ो">Add Restaurant</a>
+  <a href="#cities" data-en="Cities" data-hi="शहर">Cities</a>
+  <a href="#refer">🎁 Refer</a>
+  <a href="#web3">🔗 Web3</a>
+  <a href="#support">🎧 Support</a>
+  <a href="#" onclick="openTracking();return false">📍 Track Order</a>
+  <button class="langbtn" onclick="toggleLang()">🌐 <span id="langlbl">हिंदी</span></button>
+  <button class="langbtn" onclick="openProfile()">👤 Profile</button>
+  <button class="langbtn" onclick="shareFoodel()" data-en="📤 Share" data-hi="📤 शेयर करो">📤 Share</button>
+  <button class="navbtn" onclick="openAuth()" data-en="Login / Signup" data-hi="लॉगिन / साइनअप">Login / Signup</button>
+</nav>
+
+<div class="hero">
+  <h1 data-en="Foodel — Swad, Ghar Tak" data-hi="फूडल — स्वाद, घर तक">Foodel — Swad, Ghar Tak</h1>
+  <p data-en="India's own food delivery. Bike or car — our riders bring it fast, hot & fresh." data-hi="भारत की अपनी फूड डिलीवरी। बाइक या कार — हमारे राइडर तेज़, गरम और ताज़ा लाते हैं।">India's own food delivery. Bike or car — our riders bring it fast, hot & fresh.</p>
+  <div class="citypick">
+    <select id="citysel" onchange="filterCity()"></select>
+    <button class="cta" onclick="document.getElementById('order').scrollIntoView({behavior:'smooth'})" data-en="Find Food →" data-hi="खाना खोजो →">Find Food →</button>
+  </div>
+  <div class="stats">
+    <div class="stat"><b><span id="citycount">200</span>+</b><span data-en="Cities" data-hi="शहर">Cities</span></div>
+    <div class="stat"><b>5,000+</b><span data-en="Restaurants" data-hi="रेस्टोरेंट">Restaurants</span></div>
+    <div class="stat"><b>20,000+</b><span data-en="Delivery partners" data-hi="डिलीवरी पार्टनर">Delivery partners</span></div>
+    <div class="stat"><b>30 min</b><span data-en="Avg. delivery" data-hi="औसत डिलीवरी">Avg. delivery</span></div>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal" id="authmodal"><div class="sheet">
+  <h3 data-en="📱 Login with Phone" data-hi="📱 फोन से लॉगिन">📱 Login with Phone</h3>
+  <div class="demo">📝 Demo — asli SMS OTP ke liye paid gateway lagega (MSG91 jaisa)</div>
+  <div id="step1">
+    <label data-en="Mobile number" data-hi="मोबाइल नंबर">Mobile number</label>
+    <input id="phone" placeholder="98765 43210" maxlength="10" inputmode="numeric">
+    <button class="btn" style="width:100%;margin-top:14px" onclick="sendOTP()" data-en="Send OTP" data-hi="OTP भेजो">Send OTP</button>
+  </div>
+  <div id="step2" style="display:none">
+    <div class="otpbox"><span data-en="Demo OTP (screen par):" data-hi="डेमो OTP (स्क्रीन पर):">Demo OTP (screen par):</span><br><b id="demootp">1234</b></div>
+    <label data-en="Enter OTP" data-hi="OTP डालो">Enter OTP</label>
+    <input id="otpinput" placeholder="4-digit" maxlength="4" inputmode="numeric">
+    <button class="btn" style="width:100%;margin-top:14px" onclick="verifyOTP()" data-en="Verify" data-hi="वेरिफाई करो">Verify</button>
+  </div>
+  <div class="okmsg" id="authok"><b>✅ <span data-en="Verified! Welcome to Foodel." data-hi="वेरिफाई हो गया! फूडल में स्वागत है।">Verified! Welcome to Foodel.</span></b></div>
+  <button class="btn ghost" style="width:100%;margin-top:12px" onclick="closeAuth()" data-en="Close" data-hi="बंद करो">Close</button>
+</div></div>
+
+<!-- ORDER -->
+<section id="order">
+  <h2 class="sec" data-en="🍛 Restaurants near you" data-hi="🍛 तुम्हारे पास रेस्टोरेंट">🍛 Restaurants near you</h2>
+  <p class="secsub" id="citylabel"></p>
+  <input class="searchbar" id="q" placeholder="🔍 Search restaurant ya khana..." oninput="q=this.value;applyFilters()">
+  <div class="catstrip" id="catstrip"></div>
+  <div class="chips">
+    <button class="chip" id="ch_offer" onclick="togChip('offer')">🏷️ Offers</button>
+    <button class="chip" id="ch_free" onclick="togChip('free')">🆓 Free Delivery</button>
+    <button class="chip" id="ch_fast" onclick="togChip('fast')">⚡ Under 30 min</button>
+    <button class="chip" id="ch_top" onclick="togChip('top')">⭐ 4.5+ Rated</button>
+  </div>
+  <h3 class="rowtitle">🔥 Trending Restaurants <span style="font-size:13px;color:#999;font-weight:400">(← scroll karo →)</span></h3>
+  <div class="hrow" id="trendrow"></div>
+  <h3 class="rowtitle">💰 Bachat Wale Offers</h3>
+  <div class="hrow" id="offerrow"></div>
+  <h3 class="rowtitle">🍽️ Sab Restaurants</h3>
+  <div class="grid" id="restgrid"></div>
+</section>
+
+<div class="modal" id="menumodal"><div class="sheet">
+  <h3 id="mname"></h3><div id="mitems"></div>
+  <button class="btn ghost" style="width:100%;margin-top:14px" onclick="closeMenu()" data-en="Close" data-hi="बंद करो">Close</button>
+</div></div>
+<div id="cartbar" onclick="showCart()">🛒 <span id="cartcount">0</span> · ₹<span id="carttotal">0</span></div>
+<div class="modal" id="cartmodal"><div class="sheet">
+  <h3>🛒 Cart</h3><div id="cartitems"></div>
+  <div style="font-size:20px;font-weight:800;margin:12px 0">Total: ₹<span id="ctotal">0</span></div>
+  <label style="font-weight:700;font-size:14px">📍 Delivery address (kahan bhejna hai)</label>
+  <textarea id="daddr" rows="2" style="width:100%;padding:12px 15px;border:2px solid #e5e0d5;border-radius:12px;font-size:15px;margin:6px 0 10px" placeholder="Naam, ghar no., gali, area, landmark..."></textarea>
+  <label style="font-weight:700;font-size:14px">💳 Payment kaise karoge?</label>
+  <div style="margin:8px 0 12px">
+    <label style="display:block;padding:9px 12px;background:#f7f4ec;border-radius:10px;margin-bottom:6px;font-weight:600"><input type="radio" name="pay" value="PhonePe" checked> 📱 PhonePe UPI</label>
+    <label style="display:block;padding:9px 12px;background:#f7f4ec;border-radius:10px;margin-bottom:6px;font-weight:600"><input type="radio" name="pay" value="Paytm"> 💙 Paytm UPI</label>
+    <label style="display:block;padding:9px 12px;background:#f7f4ec;border-radius:10px;margin-bottom:6px;font-weight:600"><input type="radio" name="pay" value="BHIM UPI"> 🏦 BHIM UPI</label>
+    <label style="display:block;padding:9px 12px;background:#f7f4ec;border-radius:10px;margin-bottom:6px;font-weight:600"><input type="radio" name="pay" value="Google Pay"> 🅖 Google Pay UPI</label>
+    <label style="display:block;padding:9px 12px;background:#f7f4ec;border-radius:10px;margin-bottom:6px;font-weight:600"><input type="radio" name="pay" value="Web3"> 🪙 Web3 Wallet (Crypto)</label>
+    <label style="display:block;padding:9px 12px;background:#f7f4ec;border-radius:10px;margin-bottom:6px;font-weight:600"><input type="radio" name="pay" value="COD"> 💵 Cash on Delivery</label>
+  </div>
+  <button class="btn" style="width:100%;background:var(--org)" onclick="checkout()" data-en="Place Order" data-hi="ऑर्डर करो">Place Order</button>
+  <button class="btn ghost" style="width:100%;margin-top:10px" onclick="closeCart()" data-en="Close" data-hi="बंद करो">Close</button>
+</div></div>
+
+<!-- LIVE TRACKING -->
+<div class="modal" id="trackmodal"><div class="sheet" style="max-width:560px">
+  <h3>📍 Live Order Tracking</h3>
+  <div class="demo">📝 Demo tracking — asli GPS ke liye rider app + server lagega</div>
+  <div class="tracktabs">
+    <button class="ttab on" id="tab_cust" onclick="trackView('cust')">🧑 Customer View</button>
+    <button class="ttab" id="tab_drv" onclick="trackView('drv')">🛵 Driver View</button>
+  </div>
+  <svg id="trackmap" viewBox="0 0 400 300">
+    <rect width="400" height="300" fill="#eaf3e6"/>
+    <g stroke="#ffffff" stroke-width="14">
+      <line x1="0" y1="100" x2="400" y2="100"/><line x1="0" y1="200" x2="400" y2="200"/>
+      <line x1="100" y1="0" x2="100" y2="300"/><line x1="220" y1="0" x2="220" y2="300"/><line x1="330" y1="0" x2="330" y2="300"/>
+    </g>
+    <g stroke="#d5dfcf" stroke-width="2">
+      <line x1="0" y1="50" x2="400" y2="50"/><line x1="0" y1="150" x2="400" y2="150"/><line x1="0" y1="250" x2="400" y2="250"/>
+      <line x1="50" y1="0" x2="50" y2="300"/><line x1="160" y1="0" x2="160" y2="300"/><line x1="280" y1="0" x2="280" y2="300"/>
+    </g>
+    <path id="routepath" d="M 50,250 L 50,200 L 100,200 L 100,100 L 220,100 L 220,200 L 330,200 L 330,120" fill="none" stroke="#f2762e" stroke-width="5" stroke-dasharray="10,6"/>
+    <text x="50" y="278" font-size="26" text-anchor="middle">🏪</text>
+    <text x="50" y="295" font-size="10" text-anchor="middle">Restaurant</text>
+    <text x="330" y="112" font-size="26" text-anchor="middle">🏠</text>
+    <text x="330" y="140" font-size="10" text-anchor="middle">Your Home</text>
+    <g id="rider"><circle r="13" fill="#232323"/><text y="6" font-size="15" text-anchor="middle">🛵</text></g>
+  </svg>
+  <div class="infocard" id="trackinfo"></div>
+  <div class="steps" id="tracksteps"></div>
+  <div id="drvbtns" style="display:none">
+    <button class="btn" style="width:100%" onclick="alert('📞 Demo: customer ko call lag raha hai...')">📞 Call Customer</button>
+    <button class="btn" style="width:100%;margin-top:8px;background:var(--grn)" onclick="finishDelivery()">✅ Mark Delivered</button>
+  </div>
+  <button class="btn ghost" style="width:100%;margin-top:12px" onclick="closeTracking()" data-en="Close" data-hi="बंद करो">Close</button>
+</div></div>
+
+<!-- PARTNER -->
+<section id="partner" style="background:#fff">
+  <h2 class="sec" data-en="🛵 Deliver with Foodel — Bike ya Car" data-hi="🛵 फूडल के साथ डिलीवरी करो — बाइक या कार">🛵 Deliver with Foodel — Bike ya Car</h2>
+  <p class="secsub" data-en="Anyone can join. Phone OTP → photo → start earning the same day." data-hi="कोई भी जुड़ सकता है। फोन OTP → फोटो → उसी दिन कमाना शुरू।">Anyone can join. Phone OTP → photo → start earning the same day.</p>
+  <div class="demo">📝 Demo signup — asli verification ke liye documents check hoga</div>
+  <div style="max-width:640px;margin:10px auto;background:#fff8e1;border:2px solid #ffe082;border-radius:14px;padding:12px;text-align:center;font-weight:700">🪙 Join karne par <b>100 QSR bonus</b> + har delivery par <b>10 QSR</b>!</div>
+  <div class="grid">
+    <div class="card"><div class="pad" style="text-align:center"><div style="font-size:44px">🏍️</div><h3 data-en="Bike Partner" data-hi="बाइक पार्टनर">Bike Partner</h3><div class="meta" data-en="₹25–40 per delivery · ~₹800–1200/day" data-hi="₹25–40 प्रति डिलीवरी · ~₹800–1200/दिन">₹25–40 per delivery · ~₹800–1200/day</div><button class="btn" onclick="partnerJoin('Bike')">Join as Biker</button></div></div>
+    <div class="card"><div class="pad" style="text-align:center"><div style="font-size:44px">🚗</div><h3 data-en="Car Partner" data-hi="कार पार्टनर">Car Partner</h3><div class="meta" data-en="₹40–70 per delivery · ~₹1200–2000/day" data-hi="₹40–70 प्रति डिलीवरी · ~₹1200–2000/दिन">₹40–70 per delivery · ~₹1200–2000/day</div><button class="btn" onclick="partnerJoin('Car')">Join with Car</button></div></div>
+  </div>
+  <h3 class="rowtitle" style="text-align:center;margin-top:26px">📋 Partner Registration — documents do</h3>
+  <p class="secsub">Driving Licence + Aadhaar lagega — photo upload karo</p>
+  <div class="sheet" style="margin:0 auto;box-shadow:0 3px 14px rgba(0,0,0,.08)">
+    <label>Naam</label><input id="dname" placeholder="Tumhara naam">
+    <label>Phone</label><input id="dphone" type="tel" maxlength="10" placeholder="10-digit mobile">
+    <label>Gaadi</label>
+    <select id="dveh"><option>Bike / Scooter 🏍️</option><option>Car 🚗</option></select>
+    <label>Sheher</label><input id="dcity" placeholder="Jahan delivery karoge">
+    <label>🪪 Driving Licence Number</label><input id="dlicno" placeholder="DL-0420110149646 jaisa">
+    <label>🪪 Driving Licence ki photo</label>
+    <input type="file" id="dlicphoto" accept="image/*" style="border:2px dashed #e5e0d5;border-radius:12px;padding:12px;width:100%">
+    <label>🆔 Aadhaar Card ki photo</label>
+    <input type="file" id="daadhaar" accept="image/*" style="border:2px dashed #e5e0d5;border-radius:12px;padding:12px;width:100%">
+    <label>🤳 Apni photo (selfie)</label>
+    <input type="file" id="dselfie" accept="image/*" style="border:2px dashed #e5e0d5;border-radius:12px;padding:12px;width:100%">
+    <hr style="border:none;border-top:2px dashed #e5e0d5;margin:14px 0">
+    <label>🏦 Bank ka naam (salary isi me aayegi)</label>
+    <input id="dbank" placeholder="e.g. SBI / HDFC / PNB">
+    <label>👤 Account holder ka naam</label>
+    <input id="dholder" placeholder="Bank passbook wala naam">
+    <label>🔢 Bank Account Number</label>
+    <input id="dacct" inputmode="numeric" placeholder="Account number">
+    <label>🏦 IFSC Code</label>
+    <input id="difsc" placeholder="e.g. SBIN0123456" style="text-transform:uppercase">
+    <label>📱 PhonePe / UPI ID (agar hai)</label>
+    <input id="dupi" placeholder="e.g. 98XXXXXX10@paytm / @ybl">
+    <button class="btn" style="width:100%;margin-top:12px" onclick="partnerSubmit()">✅ Submit — Offer Letter pao</button>
+    <div class="demo" style="margin-top:8px">📝 Demo — asli verification me documents server par jayenge aur 24–48 ghante me check hoga</div>
+  </div>
+  <div class="okmsg" id="partnerok" style="max-width:640px;margin:16px auto"></div>
+  <div id="letterwrap" style="display:none;max-width:640px;margin:16px auto">
+    <div id="offerletter" style="background:#fffdf5;border:3px double #b7791f;border-radius:10px;padding:28px;font-family:Georgia,serif;color:#333;box-shadow:0 6px 24px rgba(0,0,0,.12)"></div>
+    <button class="btn" style="width:100%;margin-top:10px" onclick="printLetter()">📄 Letter save / print karo</button>
+  </div>
+</section>
+
+<!-- RESTAURANT SIGNUP -->
+<section id="restaurant">
+  <h2 class="sec" data-en="🏪 Apna restaurant jodo — FREE" data-hi="🏪 अपना रेस्टोरेंट जोड़ो — FREE">🏪 Apna restaurant jodo — FREE</h2>
+  <p class="secsub" data-en="Koi bhi restaurant ya shop register kar sakta hai. Koi joining fee nahi." data-hi="कोई भी रेस्टोरेंट या दुकान रजिस्टर कर सकता है। कोई जॉइनिंग फीस नहीं।">Koi bhi restaurant ya shop register kar sakta hai. Koi joining fee nahi.</p>
+  <div class="sheet" style="margin:0 auto;box-shadow:0 3px 14px rgba(0,0,0,.08)">
+    <label>🏪 Restaurant / Dhaba / Shop ka naam</label>
+    <input id="rname" placeholder="e.g. Sharma Dhaba">
+    <label>🍽️ Ye kis type ki jagah hai?</label>
+    <select id="rtype"><option>Restaurant 🍽️</option><option>Dhaba 🛣️</option><option>Roadside Stall 🛖</option><option>Sweet Shop 🍩</option><option>Bakery 🧁</option><option>Cloud Kitchen 👨‍🍳</option><option>Hotel / Lodge 🏨</option><option>Other</option></select>
+    <label>📍 Sheher</label>
+    <select id="rcity"></select>
+    <label>📮 Pura address</label>
+    <textarea id="raddr" rows="2" placeholder="Dukaan no., gali, area, landmark, PIN"></textarea>
+    <label>📸 Restaurant / Dhaba ki photo</label>
+    <input type="file" id="rphoto" accept="image/*" style="border:2px dashed #e5e0d5;border-radius:12px;padding:12px;width:100%">
+    <label>🍛 Kya-kya delivery karoge? (menu items)</label>
+    <textarea id="rmenu" rows="3" placeholder="e.g. Dal Baati, Chole Bhature, Paneer Tikka — comma laga kar likho"></textarea>
+    <hr style="border:none;border-top:2px dashed #e5e0d5;margin:14px 0">
+    <label>👤 Owner ka naam (jo chala raha hai)</label>
+    <input id="rowner" placeholder="e.g. Ramesh Sharma">
+    <label>🤳 Owner ki photo</label>
+    <input type="file" id="rownerphoto" accept="image/*" style="border:2px dashed #e5e0d5;border-radius:12px;padding:12px;width:100%">
+    <label>📱 Owner ka phone number</label>
+    <input id="rphone" placeholder="98765 43210" maxlength="10" inputmode="numeric">
+    <label>🆔 Owner ke Aadhaar card ki photo</label>
+    <input type="file" id="raadhaar" accept="image/*" style="border:2px dashed #e5e0d5;border-radius:12px;padding:12px;width:100%">
+    <label>🧾 Business number (GST / FSSAI licence)</label>
+    <input id="rbiz" placeholder="e.g. GST: 08ABCDE1234F1Z5 / FSSAI: 12225999000123">
+    <button class="btn" style="width:100%;margin-top:14px" onclick="regRestaurant()">✅ Register — FREE</button>
+    <div class="demo" style="margin-top:8px">📝 Demo — asli me documents 24–48 ghante me verify honge, phir listing live hogi</div>
+    <div class="okmsg" id="restok"></div>
+  </div>
+</section>
+
+<!-- PLUS -->
+<section>
+  <div class="plus">
+    <h2>⭐ Foodel Plus</h2>
+    <p data-en="₹149/month — free delivery on every order" data-hi="₹149/महीना — हर ऑर्डर पर फ्री डिलीवरी">₹149/month — free delivery on every order</p>
+    <ul>
+      <li data-en="🆓 FREE delivery, no minimum order" data-hi="🆓 फ्री डिलीवरी, कोई मिनिमम ऑर्डर नहीं">🆓 FREE delivery, no minimum order</li>
+      <li data-en="💰 10% cashback points on every order" data-hi="💰 हर ऑर्डर पर 10% कैशबैक पॉइंट्स">💰 10% cashback points on every order</li>
+      <li data-en="⚡ Priority delivery" data-hi="⚡ प्रायोरिटी डिलीवरी">⚡ Priority delivery</li>
+    </ul>
+    <button class="cta" data-en="Try Plus — 1st month FREE" data-hi="Plus try karo — पहला महीना FREE">Try Plus — 1st month FREE</button>
+  </div>
+</section>
+
+<!-- CITIES -->
+<section id="cities" style="background:#fff">
+  <h2 class="sec" data-en="🏙️ Hamare sheher" data-hi="🏙️ हमारे शहर">🏙️ Hamare sheher</h2>
+  <p class="secsub" data-en="36 states · 238 sheher — ek button, andar State chuno, phir sheher" data-hi="36 states · 238 sheher — एक बटन, अंदर State चुनो, फिर शहर">36 states · 238 sheher — ek button, andar State chuno, phir sheher</p>
+  <div style="text-align:center">
+    <button class="btn" style="font-size:18px;padding:16px 44px;border-radius:32px" onclick="openCityPicker()">📍 Apna Sheher Chuno →</button>
+  </div>
+</section>
+
+<!-- CITY PICKER -->
+<div class="modal" id="citymodal"><div class="sheet">
+  <h3>📍 Sheher chuno</h3>
+  <label>1️⃣ State chuno</label>
+  <select id="stateselect" onchange="showStateCities()"></select>
+  <label style="margin-top:16px">2️⃣ Sheher chuno</label>
+  <div id="statecities" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px"></div>
+  <button class="btn ghost" style="width:100%;margin-top:16px" onclick="closeCityPicker()" data-en="Close" data-hi="बंद करो">Close</button>
+</div></div>
+
+<!-- SAFETY -->
+<section id="safety">
+  <h2 class="sec" data-en="🛡️ Bharosa aur suraksha" data-hi="🛡️ भरोसा और सुरक्षा">🛡️ Bharosa aur suraksha</h2>
+  <div class="safety" style="margin-top:16px">
+    <div class="sbox"><div class="ico">📱</div><b>Phone OTP</b><p style="font-size:13px;color:#777" data-en="Har user verified" data-hi="हर यूज़र वेरिफाइड">Har user verified</p></div>
+    <div class="sbox"><div class="ico">📸</div><b>Photo proof</b><p style="font-size:13px;color:#777" data-en="Delivery par photo" data-hi="डिलीवरी पर फोटो">Delivery par photo</p></div>
+    <div class="sbox"><div class="ico">📍</div><b>Live tracking</b><p style="font-size:13px;color:#777" data-en="Order kahan hai, dekho" data-hi="ऑर्डर कहाँ है, देखो">Order kahan hai, dekho</p></div>
+    <div class="sbox"><div class="ico">⭐</div><b>Ratings</b><p style="font-size:13px;color:#777" data-en="Rider + restaurant rating" data-hi="राइडर + रेस्टोरेंट रेटिंग">Rider + restaurant rating</p></div>
+  </div>
+</section>
+
+<section id="web3" style="background:linear-gradient(120deg,#1a1a2e,#252545);color:#fff">
+  <h2 class="sec" style="color:#fff">🔗 Foodel Web3</h2>
+  <p class="secsub" style="color:#bbb">Future ki technology — blockchain par transparent orders, token rewards</p>
+  <div style="max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+    <div class="pcard" style="background:#23233f;text-align:center">
+      <div style="font-size:32px">🦊</div><b style="color:#fff">Connect Wallet</b><br>
+      <span style="color:#aaa;font-size:13px">MetaMask wallet jodo</span>
+      <div id="waddr" style="color:#8bc34a;font-size:13px;margin:8px 0">Not connected</div>
+      <button class="btn" style="width:100%" onclick="connectWallet()">🔗 Connect Wallet</button>
+    </div>
+    <div class="pcard" style="background:#23233f;text-align:center">
+      <div style="font-size:32px">🪙</div><b style="color:#fff">Quasar Coin (QSR)</b><br>
+      <span style="color:#aaa;font-size:13px">Har order par 10 QSR kamao</span>
+      <div style="font-size:30px;font-weight:800;color:#ffd54f;margin:8px 0"><span id="qsrbal">0</span> QSR</div>
+      <span style="color:#aaa;font-size:12px">Tokens se aage discounts milenge</span>
+    </div>
+    <div class="pcard" style="background:#23233f">
+      <div style="font-size:32px">⛓️</div><b style="color:#fff">Blockchain Orders</b><br>
+      <span style="color:#aaa;font-size:13px">Har order blockchain par record — koi hera-pheri nahi, pura transparent. Middleman khatm, restaurant ko zyada hissa.</span>
+    </div>
+  </div>
+  <div class="demo" style="max-width:760px;margin:14px auto 0">📝 Demo — wallet connect asal MetaMask se hota hai; QSR abhi demo balance hai — asli Quasar wallet judte hi real coins aayenge</div>
+</section>
+
+<section id="refer" style="background:linear-gradient(120deg,#fff8e1,#ffecb3)">
+  <h2 class="sec">🎁 Dost Bulao, ₹100 Kamao</h2>
+  <p class="secsub">Dost Foodel join kare aur pehla order kare — tumko <b>₹100</b>, dost ko bhi <b>₹100</b> wallet me!</p>
+  <div style="max-width:560px;margin:18px auto;background:#fff;border-radius:20px;padding:26px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.08)">
+    <div style="font-size:14px;color:#888">Tumhara referral code</div>
+    <div id="refcode" style="font-size:32px;font-weight:800;letter-spacing:3px;color:var(--org);margin:6px 0 14px">FOODEL100</div>
+    <button class="btn" style="width:100%;background:#25d366" onclick="shareRef('wa')">📲 WhatsApp par bhejo</button>
+    <button class="btn" style="width:100%;margin-top:10px;background:#229ed9" onclick="shareRef('tg')">✈️ Telegram par bhejo</button>
+    <button class="btn ghost" style="width:100%;margin-top:10px" onclick="shareRef('copy')">📋 Code copy karo</button>
+    <div class="demo" style="margin-top:10px">📝 Demo — asli wallet credit ke liye backend lagega</div>
+  </div>
+</section>
+
+<section id="policy">
+  <h2 class="sec">↩️ Refund & Return Policy</h2>
+  <p class="secsub">Seedhi-saadi policy, koi chhota print nahi</p>
+  <div style="max-width:760px;margin:0 auto;display:grid;gap:12px">
+    <div class="pcard"><b>❌ Order cancel (restaurant banane se pehle)</b><span>100% refund, turant. Restaurant ne banana shuru kar diya to cancel nahi hoga.</span></div>
+    <div class="pcard"><b>🍛 Galat / adhoora item aaya?</b><span>Photo bhejo 2 ghante ke andar — replacement ya 100% refund, tumhari marzi.</span></div>
+    <div class="pcard"><b>😟 Khana thanda / kharab?</b><span>Delivery ke 2 ghante ke andar report karo — poora paisa wapas ya naya khana.</span></div>
+    <div class="pcard"><b>💸 Refund kitne din me?</b><span>UPI (PhonePe/Paytm/BHIM/GPay) me 3–5 din, wallet me turant.</span></div>
+    <div class="pcard"><b>🚫 Kya refund nahi milega?</b><span>Jaan-boojh ke galat address diya, ya rider ko 15 min se zyada wait karaya — us case me refund nahi.</span></div>
+  </div>
+</section>
+
+<section id="support" style="background:var(--dark);color:#fff">
+  <h2 class="sec" style="color:#fff">🎧 24×7 Customer Support</h2>
+  <p class="secsub" style="color:#ccc">Koi dikkat? Hum yahin hain — Hindi, English, Punjabi me baat karo</p>
+  <div style="max-width:760px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+    <a href="https://wa.me/?text=Namaste%20Foodel%20Support!" target="_blank" style="text-decoration:none"><div class="pcard" style="text-align:center;background:#1e3a24"><div style="font-size:30px">📲</div><b style="color:#fff">WhatsApp</b><span style="color:#a5d6a7">Chat karo, turant jawab</span></div></a>
+    <a href="https://t.me/share/url?url=foodel.in&text=Foodel%20Support" target="_blank" style="text-decoration:none"><div class="pcard" style="text-align:center;background:#16283a"><div style="font-size:30px">✈️</div><b style="color:#fff">Telegram</b><span style="color:#90caf9">Message karo</span></div></a>
+    <a href="mailto:support@foodel.in" style="text-decoration:none"><div class="pcard" style="text-align:center;background:#3a2a16"><div style="font-size:30px">📧</div><b style="color:#fff">Email</b><span style="color:#ffcc80">support@foodel.in</span></div></a>
+  </div>
+  <div style="max-width:760px;margin:18px auto 0">
+    <details class="faq"><summary>Order late aaya to kya milega?</summary><p>30 min se zyada late = ₹50 wallet credit, automatic.</p></details>
+    <details class="faq"><summary>Payment fail ho gaya, paisa kat gaya?</summary><p>7 din me apne aap wapas. Nahi aaya to WhatsApp par bolo — hum kara denge.</p></details>
+    <details class="faq"><summary>Rider ka number milega?</summary><p>Haan, order pickup ke baad tracking screen par rider ka number dikhega (demo me nahi).</p></details>
+  </div>
+</section>
+
+<!-- PROFILE MODAL -->
+<div class="modal" id="sharemodal"><div class="sheet">
+  <h3>📤 Foodel ko share karo</h3>
+  <p style="color:#666;font-size:14px">Doston ko bhejo — jahan chaho, ek tap me:</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0">
+    <button onclick="shareVia('wa')" style="background:#25D366;color:#fff;border:none;border-radius:12px;padding:13px;font-weight:700;font-size:15px;cursor:pointer">🟢 WhatsApp</button>
+    <button onclick="shareVia('tg')" style="background:#229ED9;color:#fff;border:none;border-radius:12px;padding:13px;font-weight:700;font-size:15px;cursor:pointer">✈️ Telegram</button>
+    <button onclick="shareVia('fb')" style="background:#1877F2;color:#fff;border:none;border-radius:12px;padding:13px;font-weight:700;font-size:15px;cursor:pointer">📘 Facebook</button>
+    <button onclick="shareVia('ig')" style="background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF);color:#fff;border:none;border-radius:12px;padding:13px;font-weight:700;font-size:15px;cursor:pointer">📸 Instagram</button>
+  </div>
+  <button onclick="shareVia('copy')" style="width:100%;background:#fff3e0;color:#e65100;border:1px solid #ffb74d;border-radius:12px;padding:12px;font-weight:700;font-size:15px;cursor:pointer">📋 Link Copy Karo</button>
+  <button onclick="closeShare()" style="width:100%;margin-top:10px;background:none;border:none;color:#888;font-size:14px;cursor:pointer">Band karo ✖</button>
+</div></div>
+<div class="modal" id="profmodal"><div class="sheet">
+  <h3>👤 Mera Profile</h3>
+  <label>Naam</label><input id="pname" placeholder="Tumhara naam">
+  <label>Email</label><input id="pemail" type="email" placeholder="tum@email.com">
+  <label>Phone</label><input id="pphone" type="tel" maxlength="10" placeholder="10-digit mobile">
+  <label>Ghar ka address (delivery ke liye)</label>
+  <textarea id="paddr" rows="2" placeholder="Ghar no., gali, area, landmark, sheher, PIN"></textarea>
+  <button class="btn" style="width:100%;margin-top:10px" onclick="saveProfile()">💾 Save Profile</button>
+  <button class="btn ghost" style="width:100%;margin-top:10px" onclick="closeProfile()">Close</button>
+</div></div>
+
+<footer>
+  <b>🍛 Foodel · फूडल</b><br><br>
+  <div style="font-size:24px;letter-spacing:4px;margin-bottom:8px">
+    <a href="https://wa.me/?text=Namaste%20Foodel!" target="_blank" style="text-decoration:none" title="WhatsApp">📲</a>
+    <a href="https://t.me/share/url?url=foodel.in&text=Foodel%20-%20swad%20ghar%20tak" target="_blank" style="text-decoration:none" title="Telegram">✈️</a>
+    <a href="mailto:support@foodel.in" style="text-decoration:none" title="Email">📧</a>
+  </div>
+  <div style="margin-bottom:8px"><a href="#policy" style="color:#ffd54f">↩️ Refund Policy</a> · <a href="#refer" style="color:#ffd54f">🎁 Refer & Earn</a> · <a href="#support" style="color:#ffd54f">🎧 Support</a> · <a href="#" onclick="shareFoodel();return false" style="color:#ffd54f">📤 Share Foodel</a></div>
+  <span data-en="Swad, ghar tak — all over India." data-hi="स्वाद, घर तक — पूरे भारत में।">Swad, ghar tak — all over India.</span><br>
+  <span style="font-size:13px">© 2026 Foodel · Demo website</span>
+</footer>
+
+<script>
+let LANG='en';
+function toggleLang(){LANG=LANG==='en'?'hi':'en';
+ document.getElementById('langlbl').textContent=LANG==='en'?'हिंदी':'EN';
+ document.querySelectorAll('[data-en]').forEach(el=>{el.textContent=el.dataset[LANG];});}
+/* cities */
+/* cities — state-wise, all India */
+const statesData={
+"Andhra Pradesh":["Visakhapatnam","Vijayawada","Guntur","Nellore","Kurnool","Tirupati","Rajahmundry","Kakinada","Anantapur","Chittoor"],
+"Arunachal Pradesh":["Itanagar","Tawang","Pasighat","Ziro","Bomdila"],
+"Assam":["Guwahati","Dibrugarh","Silchar","Jorhat","Tezpur","Nagaon","Tinsukia"],
+"Bihar":["Patna","Gaya","Bhagalpur","Muzaffarpur","Darbhanga","Purnia","Arrah","Begusarai","Chapra"],
+"Chhattisgarh":["Raipur","Bhilai","Bilaspur","Korba","Raigarh","Durg","Jagdalpur"],
+"Delhi NCR":["Delhi","Noida","Gurgaon","Faridabad","Ghaziabad"],
+"Goa":["Panaji","Margao","Vasco da Gama","Mapusa","Ponda"],
+"Gujarat":["Ahmedabad","Surat","Vadodara","Rajkot","Bhavnagar","Jamnagar","Gandhinagar","Anand","Morbi","Nadiad"],
+"Haryana":["Faridabad","Gurgaon","Panipat","Ambala","Karnal","Hisar","Rohtak","Sonipat","Yamunanagar"],
+"Himachal Pradesh":["Shimla","Manali","Dharamshala","Solan","Mandi","Kullu","Hamirpur"],
+"Jharkhand":["Ranchi","Jamshedpur","Dhanbad","Bokaro","Hazaribagh","Deoghar","Giridih"],
+"Karnataka":["Bangalore","Mysore","Hubli","Mangalore","Belgaum","Gulbarga","Davangere","Bellary","Shimoga","Tumkur","Udupi"],
+"Kerala":["Thiruvananthapuram","Kochi","Kozhikode","Thrissur","Kollam","Kannur","Alappuzha","Kottayam","Palakkad"],
+"Madhya Pradesh":["Bhopal","Indore","Gwalior","Jabalpur","Ujjain","Sagar","Ratlam","Rewa","Satna","Dewas","Khandwa"],
+"Maharashtra":["Mumbai","Pune","Nagpur","Nashik","Aurangabad","Thane","Solapur","Kolhapur","Amravati","Navi Mumbai","Latur","Dhule"],
+"Manipur":["Imphal","Thoubal","Bishnupur","Churachandpur"],
+"Meghalaya":["Shillong","Tura","Jowai","Nongpoh"],
+"Mizoram":["Aizawl","Lunglei","Champhai"],
+"Nagaland":["Kohima","Dimapur","Mokokchung"],
+"Odisha":["Bhubaneswar","Cuttack","Rourkela","Sambalpur","Puri","Berhampur","Balasore","Baripada"],
+"Punjab":["Ludhiana","Amritsar","Jalandhar","Patiala","Bathinda","Mohali","Pathankot","Moga"],
+"Rajasthan":["Jaipur","Jodhpur","Udaipur","Kota","Ajmer","Bikaner","Alwar","Bharatpur","Sikar","Pali","Sriganganagar"],
+"Sikkim":["Gangtok","Namchi","Gyalshing","Rangpo"],
+"Tamil Nadu":["Chennai","Coimbatore","Madurai","Tiruchirappalli","Salem","Tirunelveli","Erode","Vellore","Thoothukudi","Dindigul"],
+"Telangana":["Hyderabad","Warangal","Nizamabad","Karimnagar","Khammam","Mahbubnagar"],
+"Tripura":["Agartala","Udaipur","Dharmanagar","Kailashahar"],
+"Uttar Pradesh":["Lucknow","Kanpur","Varanasi","Agra","Prayagraj","Meerut","Bareilly","Aligarh","Moradabad","Saharanpur","Gorakhpur","Jhansi","Mathura","Ayodhya","Firozabad","Muzaffarnagar"],
+"Uttarakhand":["Dehradun","Haridwar","Haldwani","Rishikesh","Roorkee","Kashipur","Rudrapur","Kotdwar"],
+"West Bengal":["Kolkata","Howrah","Durgapur","Asansol","Siliguri","Kharagpur","Haldia","Bardhaman","Malda"],
+"Jammu & Kashmir":["Jammu","Srinagar","Anantnag","Baramulla","Kathua","Udhampur"],
+"Ladakh":["Leh","Kargil"],
+"Chandigarh":["Chandigarh"],
+"Puducherry":["Puducherry","Karaikal"],
+"Andaman & Nicobar":["Port Blair"],
+"Dadra & Nagar Haveli, Daman & Diu":["Silvassa","Daman","Diu"],
+"Lakshadweep":["Kavaratti"]
+};
+const cs=document.getElementById('citysel'),rc=document.getElementById('rcity'),ssel=document.getElementById('stateselect');
+Object.keys(statesData).forEach(st=>{
+ cs.innerHTML+=`<optgroup label="${st}">`+statesData[st].map(c=>`<option>${c}</option>`).join('')+`</optgroup>`;
+ rc.innerHTML+=`<optgroup label="${st}">`+statesData[st].map(c=>`<option>${c}</option>`).join('')+`</optgroup>`;
+ ssel.innerHTML+=`<option>${st}</option>`;
+});
+function openCityPicker(){document.getElementById('citymodal').classList.add('show');showStateCities();}
+function closeCityPicker(){document.getElementById('citymodal').classList.remove('show');}
+function showStateCities(){const st=ssel.value;
+ document.getElementById('statecities').innerHTML=statesData[st].map(c=>`<button class="chip" onclick="pickCity('${c}');closeCityPicker()">${c}</button>`).join('');}
+const totalCities=Object.values(statesData).reduce((a,b)=>a+b.length,0);
+document.getElementById('citycount').textContent=totalCities;
+function pickCity(c){cs.value=c;filterCity();document.getElementById('order').scrollIntoView({behavior:'smooth'});}
+/* restaurants — tags: cuisine + veg/nonveg/shakahari + regional */
+const rests=[
+ {n:"Royal Biryani House",city:"Delhi",c:"Biryani · Mughlai",tags:["biryani","nonveg"],r:"4.6",t:"30 min",fee:29,off:1,img:"biryani1",menu:[["Chicken Dum Biryani",249],["Mutton Biryani",349],["Veg Biryani",199]]},
+ {n:"Pandit Chaat Bhandar",city:"Delhi",c:"Chaat · Street Food",tags:["chaat","veg","shakahari"],r:"4.4",t:"20 min",fee:19,off:0,img:"chaat2",menu:[["Aloo Tikki Chaat",79],["Pani Puri (8 pc)",69],["Dahi Bhalla",99]]},
+ {n:"Dosa Junction",city:"Bangalore",c:"South Indian",tags:["south","veg"],r:"4.5",t:"25 min",fee:0,off:1,img:"dosa3",menu:[["Masala Dosa",129],["Idli Sambar",89],["Filter Coffee",49]]},
+ {n:"Namma Biryani",city:"Bangalore",c:"Biryani",tags:["biryani","nonveg"],r:"4.3",t:"35 min",fee:25,off:0,img:"biryani7",menu:[["Donne Biryani",229],["Veg Biryani",179]]},
+ {n:"Pahadi Rasoi",city:"Dehradun",c:"Pahadi · North Indian",tags:["north","veg"],r:"4.7",t:"30 min",fee:0,off:1,img:"pahadi8",menu:[["Pahadi Thali",199],["Chainsoo Dal",149],["Momos (8 pc)",99]]},
+ {n:"Awadhi Biryani House",city:"Lucknow",c:"Awadhi",tags:["biryani","nonveg"],r:"4.8",t:"35 min",fee:29,off:1,img:"awadh9",menu:[["Lucknowi Biryani",249],["Kakori Kebab",299],["Sheermal",49]]},
+ {n:"Sharma Chai & Snacks",city:"Lucknow",c:"Chai · Snacks",tags:["bev","veg"],r:"4.4",t:"15 min",fee:15,off:0,img:"chai10",menu:[["Kulhad Chai",29],["Bun Maska",49],["Samosa",39]]},
+ {n:"Thaggu Ke Laddu",city:"Kanpur",c:"Mithai",tags:["sweets","veg","shakahari"],r:"4.6",t:"20 min",fee:19,off:0,img:"laddu11",menu:[["Motichoor Laddu 500g",149],["Imarti 250g",99]]},
+ {n:"Kashi Chaat House",city:"Varanasi",c:"Chaat",tags:["chaat","veg","shakahari"],r:"4.5",t:"20 min",fee:0,off:1,img:"kashi12",menu:[["Tamatar Chaat",79],["Banarasi Paan",39]]},
+ {n:"Petha Mahal",city:"Agra",c:"Mithai",tags:["sweets","veg","shakahari"],r:"4.4",t:"25 min",fee:19,off:0,img:"petha13",menu:[["Kesar Petha 500g",129],["Dalmoth",79]]},
+ {n:"Indori Poha House",city:"Indore",c:"Indori Snacks",tags:["breakfast","veg"],r:"4.7",t:"15 min",fee:0,off:1,img:"poha14",menu:[["Indori Poha",49],["Jalebi-Poha",79],["Sabudana Khichdi",89]]},
+ {n:"Bhopal Biryani Point",city:"Bhopal",c:"Biryani",tags:["biryani","nonveg"],r:"4.3",t:"30 min",fee:25,off:0,img:"bhopal15",menu:[["Chicken Biryani",219],["Seekh Kebab",199]]},
+ {n:"Mysore Masala",city:"Mysore",c:"South Indian",tags:["south","veg","kannada"],r:"4.5",t:"25 min",fee:20,off:0,img:"mysore16",menu:[["Mysore Masala Dosa",139],["Kesari Bath",69]]},
+ {n:"Noida Food Street",city:"Noida",c:"Multi-cuisine",tags:["north","veg","nonveg"],r:"4.2",t:"30 min",fee:29,off:1,img:"noida17",menu:[["Chole Bhature",119],["Pav Bhaji",109]]},
+ {n:"Cyber Hub Eats",city:"Gurgaon",c:"Fast Food · Chinese",tags:["chinese","nonveg"],r:"4.3",t:"25 min",fee:25,off:0,img:"gurgaon18",menu:[["Hakka Noodles",149],["Manchurian",139]]},
+ {n:"Shudh Shakahari Bhojnalaya",city:"Delhi",c:"Pure Veg · Jain options",tags:["north","veg","shakahari","vaishnav"],r:"4.8",t:"25 min",fee:0,off:1,img:"shakahari19",menu:[["Shakahari Thali",179],["Jain Dal (no onion-garlic)",149],["Satvik Sabzi Combo",159]]},
+ {n:"Punjabi Tadka",city:"Delhi",c:"Punjabi",tags:["punjabi","north","nonveg"],r:"4.6",t:"30 min",fee:29,off:1,img:"punjabi20",menu:[["Butter Chicken",299],["Amritsari Kulcha",99],["Sarson Saag + Makki Roti",179]]},
+ {n:"Amritsari Dhaba",city:"Amritsar",c:"Punjabi",tags:["punjabi","north","veg"],r:"4.7",t:"25 min",fee:19,off:0,img:"amritsar21",menu:[["Amritsari Kulcha",89],["Lassi",69],["Dal Makhani",169]]},
+ {n:"Udupi Sri Krishna",city:"Bangalore",c:"Udupi · South Indian",tags:["udupi","south","veg","shakahari"],r:"4.6",t:"20 min",fee:0,off:1,img:"udupi22",menu:[["Udupi Masala Dosa",119],["Idli Vada",79],["Mangalore Buns",59]]},
+ {n:"Mangalore Fish House",city:"Mangalore",c:"Mangalorean · Seafood",tags:["mangalorean","nonveg"],r:"4.5",t:"35 min",fee:35,off:0,img:"mangalore23",menu:[["Fish Curry Rice",249],["Neer Dosa (3 pc)",79],["Prawn Ghee Roast",329]]},
+ {n:"Tamil Nadu Mess",city:"Chennai",c:"Tamil · Chettinad",tags:["tamil","south","nonveg"],r:"4.4",t:"30 min",fee:25,off:1,img:"tamil24",menu:[["Chettinad Chicken",269],["Banana Leaf Meals",149],["Parotta (2 pc)",59]]},
+ {n:"Andhra Spice House",city:"Hyderabad",c:"Telugu · Andhra",tags:["telugu","biryani","nonveg"],r:"4.5",t:"30 min",fee:0,off:1,img:"telugu25",menu:[["Hyderabadi Biryani",259],["Andhra Chicken Curry",249],["Gongura Mutton",329]]},
+ {n:"Kannada Oota Mane",city:"Bangalore",c:"Kannada · Karnataka",tags:["kannada","south","veg"],r:"4.4",t:"25 min",fee:20,off:0,img:"kannada26",menu:[["Bisibelebath",99],["Jolada Rotti Oota",129],["Maddur Vada",49]]},
+ {n:"Vaishnav Bhojnalaya",city:"Lucknow",c:"Vaishnav · Sattvik Thali",tags:["north","veg","vaishnav","shakahari"],r:"4.3",t:"20 min",fee:0,off:1,img:"vaishnav27",menu:[["Vaishnav Thali",149],["Dal-Roti Combo",99],["Family Pack (4 log)",499]]},
+ {n:"Green Bowl Salads",city:"Mumbai",c:"Healthy · Salads",tags:["healthy","veg"],r:"4.5",t:"20 min",fee:29,off:0,img:"healthy28",menu:[["Buddha Bowl",199],["Sprout Salad",129],["Detox Juice",99]]},
+ {n:"Pizza Junction",city:"Pune",c:"Pizza · Italian",tags:["pizza","veg","nonveg"],r:"4.2",t:"30 min",fee:0,off:1,img:"pizza29",menu:[["Margherita Pizza",199],["Farm House Pizza",299],["Garlic Bread",99]]},
+ {n:"Burger Adda",city:"Mumbai",c:"Burgers · Fast Food",tags:["burger","nonveg"],r:"4.1",t:"25 min",fee:25,off:0,img:"burger30",menu:[["Classic Burger",129],["Peri Peri Fries",99],["Chicken Burger",159]]},
+ {n:"Cake & Crumb",city:"Kolkata",c:"Desserts · Bakery",tags:["dessert","veg"],r:"4.6",t:"30 min",fee:29,off:1,img:"dessert31",menu:[["Chocolate Truffle Cake",449],["Red Velvet Pastry",119],["Brownie",89]]},
+ {n:"Marwar Bhojnalaya",city:"Jaipur",c:"Rajasthani",tags:["rajasthani","veg"],r:"4.5",t:"30 min",fee:25,off:1,img:"rajasthani32",menu:[["Dal Baati Churma",199],["Gatte ki Sabzi",149],["Ker Sangri",129]]},
+ {n:"Utkal Rasoi",city:"Bhubaneswar",c:"Odia",tags:["odia","veg"],r:"4.4",t:"25 min",fee:20,off:0,img:"odia33",menu:[["Dalma",99],["Chhena Poda",149],["Pakhala Bhata",79]]},
+ {n:"Bong Kitchen",city:"Kolkata",c:"Bengali",tags:["bengali","nonveg"],r:"4.6",t:"35 min",fee:29,off:1,img:"bengali34",menu:[["Macher Jhol",229],["Kosha Mangsho",329],["Rasgulla (4 pc)",99]]},
+ {n:"Rasoi Odisha",city:"Cuttack",c:"Odia",tags:["odia","nonveg"],r:"4.3",t:"30 min",fee:25,off:0,img:"odia35",menu:[["Machha Besara",199],["Chingudi Jhola",249],["Rasabali",119]]},
+ {n:"Kolkata Wine & Spirits",city:"Kolkata",c:"Beer · Wine · Whisky",tags:["liquor"],r:"4.4",t:"40 min",fee:49,off:0,img:"liquor36",menu:[["Kingfisher Premium 650ml",180],["Sula Red Wine 750ml",895],["Blenders Pride 750ml",890]]},
+ {n:"Odisha Spirits Hub",city:"Bhubaneswar",c:"Beer · Rum · Vodka",tags:["liquor"],r:"4.3",t:"35 min",fee:39,off:0,img:"liquor37",menu:[["Bira White 330ml",160],["Old Monk Rum 750ml",550],["Magic Moments Vodka 750ml",690]]},
+ {n:"Ranchi Liquor Point",city:"Ranchi",c:"Whisky · Beer",tags:["liquor"],r:"4.2",t:"40 min",fee:49,off:1,img:"liquor38",menu:[["Royal Stag 750ml",720],["Tuborg Strong 650ml",150],["Imperial Blue 750ml",610]]},
+ {n:"Goa Wine Store",city:"Panaji",c:"Wine · Beer · Feni",tags:["liquor"],r:"4.6",t:"30 min",fee:29,off:1,img:"liquor39",menu:[["Kings Beer 330ml",70],["Goa Port Wine 750ml",220],["Cashew Feni 750ml",450]]}
+];
+/* categories — one-line scroll strip */
+const cats=[["all","🍽️","All"],["veg","🥦","Vegetarian"],["nonveg","🍗","Non-Veg"],["shakahari","🪔","Shudh Shakahari"],["vaishnav","🪔","Vaishnav Bhojnalaya"],["biryani","🍛","Biryani"],["chaat","🫕","Chaat"],["south","🥞","South Indian"],["north","🍗","North Indian"],["punjabi","🧈","Punjabi"],["udupi","🥥","Udupi"],["mangalorean","🐟","Mangalorean"],["tamil","🍌","Tamil"],["telugu","🌶️","Telugu"],["kannada","🍚","Kannada"],["chinese","🍜","Chinese"],["pizza","🍕","Pizza"],["burger","🍔","Burgers"],["dessert","🍰","Desserts"],["bev","🥤","Beverages"],["liquor","🍺","Liquor 21+"],["sweets","🍩","Sweets"],["healthy","🥗","Healthy"],["breakfast","🍳","Breakfast"],["rajasthani","🥘","Rajasthani"],["odia","🍤","Odia"],["bengali","🐟","Bengali"]];
+let fcat='all',chips={offer:0,free:0,fast:0,top:0},q='';
+document.getElementById('catstrip').innerHTML=cats.map(x=>`<div class="cat${x[0]==='all'?' sel':''}" onclick="setCat('${x[0]}',this)"><div class="e">${x[1]}</div><span>${x[2]}</span></div>`).join('');
+let ageOk=false;
+function setCat(c,el){if(c==='liquor'&&!ageOk){if(!confirm('Ye section sirf 21+ ke liye hai. Kya tum 21 saal se upar ho?'))return;ageOk=true;}fcat=c;document.querySelectorAll('.cat').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');applyFilters();}
+function togChip(k){chips[k]=chips[k]?0:1;document.getElementById('ch_'+k).classList.toggle('on',!!chips[k]);applyFilters();}
+let cart=[];
+function filterCity(){applyFilters();}
+function applyFilters(){const c=cs.value;
+ document.getElementById('citylabel').textContent='📍 '+c+' — '+(LANG==='hi'?'यहाँ के रेस्टोरेंट':'Restaurants here');
+ let list=rests.filter(x=>x.city===c);
+ if(fcat!=='all')list=list.filter(x=>x.tags.includes(fcat));
+ if(chips.offer)list=list.filter(x=>x.off);
+ if(chips.free)list=list.filter(x=>x.fee===0);
+ if(chips.fast)list=list.filter(x=>parseInt(x.t)<30);
+ if(chips.top)list=list.filter(x=>parseFloat(x.r)>=4.5);
+ if(q){const s=q.toLowerCase();list=list.filter(x=>x.n.toLowerCase().includes(s)||x.c.toLowerCase().includes(s));}
+ document.getElementById('restgrid').innerHTML=list.length?list.map((x,idx)=>{const i=rests.indexOf(x);return `
+ <div class="card"><img src="https://picsum.photos/seed/${x.img}/400/300">${idx===0?'<span class="spons">Sponsored</span>':''}<div class="pad"><h3>${x.n}</h3>
+ <div class="meta">⭐${x.r} · ${x.fee===0?'🆓 Free delivery':'₹'+x.fee+' delivery'} · 🕐${x.t}${x.off?' · 🏷️ Offer':''}</div>
+ <span class="tag g">${x.c}</span><span class="tag b">📍 ${x.city}</span><br><br>
+ <button class="btn" onclick="openMenu(${i})">${LANG==='hi'?'मेनू देखो':'View Menu'}</button></div></div>`;}).join('')
+ :`<p style="grid-column:1/-1;text-align:center;color:#888">Kuch nahi mila — filter hatao ya doosra sheher chuno 🙂</p>`;}
+applyFilters();
+/* horizontal scroll rows — Trending + Offers */
+function buildRows(){
+ const top=[...rests].sort((a,b)=>parseFloat(b.r)-parseFloat(a.r)).slice(0,10);
+ document.getElementById('trendrow').innerHTML=top.map(x=>{const i=rests.indexOf(x);return `
+ <div class="hcard" onclick="openMenu(${i})"><img src="https://picsum.photos/seed/${x.img}/400/300">
+ ${x.off?'<span class="offbadge">🏷️ Buy 1 Get 1 FREE</span>':''}
+ <button class="heart" onclick="event.stopPropagation();this.textContent=this.textContent==='🤍'?'❤️':'🤍'">🤍</button>
+ <div class="pad"><h4>${x.n}</h4><div class="meta">⭐${x.r} · 🕐${x.t} · 📍${x.city}</div>
+ <div class="meta">${x.fee===0?'🆓 Free delivery':'₹'+x.fee+' delivery'} · ${x.c}</div></div></div>`;}).join('');
+ const offers=[["🎉","FOODEL50","50% OFF — pehle order par, code: FOODEL50"],["🏷️","Buy 1 Get 1 FREE","Chune hue restaurants par"],["💰","₹100 OFF","₹499+ ke order par, code: FOODEL100"],["🆓","Free Delivery","₹199+ ke saare orders par"],["⭐","Plus Members","Extra 10% points har order par"]];
+ document.getElementById('offerrow').innerHTML=offers.map(o=>`<div class="offcard"><div style="font-size:26px">${o[0]}</div><b>${o[1]}</b><span>${o[2]}</span></div>`).join('');
+}
+buildRows();
+
+/* menu + cart */
+function openMenu(i){const x=rests[i];document.getElementById('mname').textContent=x.n+' · '+x.city;
+ document.getElementById('mitems').innerHTML=x.menu.map(m=>`<div class="mitem"><div class="nm"><b>${m[0]}</b></div><div><span class="pr">₹${m[1]}</span><button class="add" onclick="addCart('${m[0].replace(/'/g,'')}','${m[1]}')">Add</button></div></div>`).join('');
+ document.getElementById('menumodal').classList.add('show');}
+function closeMenu(){document.getElementById('menumodal').classList.remove('show');}
+function addCart(n,p){cart.push({n,p:+p});updCart();}
+function updCart(){const t=cart.reduce((a,b)=>a+b.p,0);
+ document.getElementById('cartcount').textContent=cart.length;
+ document.getElementById('carttotal').textContent=t;
+ document.getElementById('cartbar').classList.toggle('show',cart.length>0);}
+function showCart(){document.getElementById('cartitems').innerHTML=cart.map(c=>`<div class="mitem"><div class="nm"><b>${c.n}</b></div><span class="pr">₹${c.p}</span></div>`).join('')||'<p>Cart khaali hai</p>';
+ document.getElementById('ctotal').textContent=cart.reduce((a,b)=>a+b.p,0);
+ document.getElementById('cartmodal').classList.add('show');}
+function closeCart(){document.getElementById('cartmodal').classList.remove('show');}
+function checkout(){const a=document.getElementById('daddr').value.trim();
+ if(cart.length===0)return;
+ if(!a){alert('📍 Pehle delivery address likho (kahan bhejna hai)');document.getElementById('daddr').focus();return;}
+ const pay=document.querySelector('input[name=pay]:checked').value;
+ const t=cart.reduce((a2,b)=>a2+b.p,0);
+ const fdl=parseInt(localStorage.getItem('foodel_qsr')||'0')+10;localStorage.setItem('foodel_qsr',fdl);
+ let msg;
+ if(pay==='COD')msg='💵 Cash on Delivery chuna — ₹'+t+' ready rakhna.';
+ else if(pay==='Web3')msg='🪙 Web3 wallet se ₹'+t+' ki payment request bheji (Demo) — wallet me approve karo.';
+ else msg='📱 '+pay+' par ₹'+t+' ki payment request bheji gayi (Demo) — apne app me approve karo ✅';
+ alert(msg+'\n🎁 +10 QSR mile! Balance: '+fdl+' QSR');
+ cart=[];updCart();closeCart();startTracking();updQSR();}
+/* WEB3 */
+async function connectWallet(){
+ if(window.ethereum){try{const a=await window.ethereum.request({method:'eth_requestAccounts'});
+  localStorage.setItem('foodel_wallet',a[0]);
+  document.getElementById('waddr').textContent='✅ '+a[0].slice(0,6)+'...'+a[0].slice(-4);
+  alert('✅ Wallet connect ho gaya!');}catch(e){alert('Wallet connect cancel ho gaya');}}
+ else alert('📱 MetaMask wallet nahi mila — pehle MetaMask app/extension lagao. (Demo mode me bina wallet ke bhi chalega)');}
+function updQSR(){const e=document.getElementById('qsrbal');if(e)e.textContent=localStorage.getItem('foodel_qsr')||'0';
+ const w=localStorage.getItem('foodel_wallet');if(w)document.getElementById('waddr').textContent='✅ '+w.slice(0,6)+'...'+w.slice(-4);}
+/* PROFILE — localStorage */
+function openProfile(){const p=JSON.parse(localStorage.getItem('foodel_profile')||'{}');
+ pname.value=p.name||'';pemail.value=p.email||'';pphone.value=p.phone||'';paddr.value=p.addr||'';
+ document.getElementById('profmodal').classList.add('show');}
+function closeProfile(){document.getElementById('profmodal').classList.remove('show');}
+function saveProfile(){const p={name:pname.value.trim(),email:pemail.value.trim(),phone:pphone.value.trim(),addr:paddr.value.trim()};
+ localStorage.setItem('foodel_profile',JSON.stringify(p));
+ if(p.addr)document.getElementById('daddr').value=p.addr;
+ closeProfile();alert('✅ Profile save ho gaya!');}
+/* SHARE APP */
+function shareFoodel(){document.getElementById('sharemodal').classList.add('show');}
+function closeShare(){document.getElementById('sharemodal').classList.remove('show');}
+function shareVia(how){var url=location.href;var note='🍛 Foodel — fresh khana, tez delivery! Abhi order karo:';var txt=note+' '+url;
+ if(how==='wa')window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+ else if(how==='tg')window.open('https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(note),'_blank');
+ else if(how==='fb')window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url),'_blank');
+ else if(how==='ig'){if(navigator.share){navigator.share({title:'Foodel',text:txt,url:url}).catch(function(){});}else if(navigator.clipboard){navigator.clipboard.writeText(txt);alert('📋 Link copy ho gaya — Instagram kholkar paste kar do!');}}
+ else if(how==='copy'){if(navigator.clipboard){navigator.clipboard.writeText(txt);alert('📋 Foodel ka link copy ho gaya — jise chaho bhej do!');}}
+ closeShare();}
+/* REFER */
+function shareRef(how){const code=document.getElementById('refcode').textContent;
+ const msg=encodeURIComponent('Foodel par khana order karo! Mera code '+code+' use karo — tumko ₹100, mujhe ₹100! 🍛');
+ if(how==='wa')window.open('https://wa.me/?text='+msg,'_blank');
+ else if(how==='tg')window.open('https://t.me/share/url?url='+encodeURIComponent('https://foodel.in')+'&text='+msg,'_blank');
+ else{navigator.clipboard&&navigator.clipboard.writeText(code);alert('📋 Code copy ho gaya: '+code);}}
+/* prefill saved address + ref code on load */
+(function(){try{const p=JSON.parse(localStorage.getItem('foodel_profile')||'{}');
+ if(p.addr)document.getElementById('daddr').value=p.addr;}catch(e){}
+ document.getElementById('refcode').textContent='FOODEL'+Math.floor(1000+Math.random()*9000);updQSR();})();
+/* LIVE TRACKING demo */
+let trackTimer=null,trackProg=0,trackMode='cust';
+const tsteps=[["🧾","Order confirmed"],["👨‍🍳","Preparing"],["🛍️","Rider picked up"],["🛵","On the way"],["🏠","Delivered"]];
+function openTracking(){startTracking();}
+function startTracking(){document.getElementById('trackmodal').classList.add('show');trackView('cust');
+ delivered=false;trackProg=0;clearInterval(trackTimer);
+ trackTimer=setInterval(()=>{trackProg=Math.min(1,trackProg+1/45);drawTrack();
+  if(trackProg>=1){clearInterval(trackTimer);}},1000);drawTrack();}
+function closeTracking(){document.getElementById('trackmodal').classList.remove('show');clearInterval(trackTimer);}
+function trackView(m){trackMode=m;
+ document.getElementById('tab_cust').classList.toggle('on',m==='cust');
+ document.getElementById('tab_drv').classList.toggle('on',m==='drv');
+ document.getElementById('drvbtns').style.display=m==='drv'?'block':'none';drawTrack();}
+function drawTrack(){const p=document.getElementById('routepath'),L=p.getTotalLength(),pt=p.getPointAtLength(L*trackProg);
+ const g=document.getElementById('rider');g.setAttribute('transform',`translate(${pt.x},${pt.y})`);
+ const eta=Math.ceil((1-trackProg)*25),km=((1-trackProg)*4.2).toFixed(1);
+ const stage=trackProg<0.15?0:trackProg<0.4?1:trackProg<0.55?2:trackProg<1?3:4;
+ document.getElementById('tracksteps').innerHTML=tsteps.map((s,i)=>`<div class="step${i<stage?' done':i===stage?' now':''}"><div class="d">${i<stage?'✓':s[0]}</div>${s[1]}</div>`).join('');
+ document.getElementById('trackinfo').innerHTML=trackMode==='cust'
+  ?`<b>🛵 ${trackProg>=1?'Pahunch gaya! 🎉':'Rider aa raha hai'}</b><br>⏱️ ETA: ${trackProg>=1?'0':eta} min · 📏 ${km} km door<br>👤 Rider: <b>Ravi Kumar</b> · ⭐4.8 · 🏍️ UP-32-AB-1234`
+  :`<b>📦 Delivery address:</b><br>🏠 12, Gomti Nagar, ${cs?cs.value:'Lucknow'}<br>👤 Customer: <b>Sandeep</b> · 📱 98XXXXXX10<br>⏱️ ${trackProg>=1?'Delivered ✅':eta+' min me pahunchna hai'}<br>🪙 Mera QSR balance: <b>${localStorage.getItem('foodel_qsr_drv')||'0'} QSR</b> · ${localStorage.getItem('foodel_qsr_drv_count')||'0'} deliveries · +10 QSR har delivery par!`;};
+function finishDelivery(){if(!delivered){delivered=true;
+ const q=parseInt(localStorage.getItem('foodel_qsr_drv')||'0')+10;localStorage.setItem('foodel_qsr_drv',q);
+ const nd=(parseInt(localStorage.getItem('foodel_qsr_drv_count')||'0'))+1;localStorage.setItem('foodel_qsr_drv_count',nd);
+ alert('🎉 Order delivered! +10 QSR mile (Total: '+q+' QSR) (Demo)');}
+ else alert('🎉 Order delivered! (Demo)');
+ trackProg=1;drawTrack();}
+let delivered=false;
+/* auth OTP demo */
+let realOTP='';
+function openAuth(){document.getElementById('authmodal').classList.add('show');}
+function closeAuth(){document.getElementById('authmodal').classList.remove('show');}
+function sendOTP(){const ph=document.getElementById('phone').value.replace(/\D/g,'');
+ if(ph.length!==10){alert('10-digit number dalo');return;}
+ realOTP=String(Math.floor(1000+Math.random()*9000));
+ document.getElementById('demootp').textContent=realOTP;
+ document.getElementById('step1').style.display='none';
+ document.getElementById('step2').style.display='block';}
+function verifyOTP(){if(document.getElementById('otpinput').value===realOTP){
+ document.getElementById('step2').style.display='none';
+ document.getElementById('authok').classList.add('show');}
+ else alert('Galat OTP — screen par wala dalo');}
+/* partner + restaurant */
+function partnerJoin(v){const b=document.getElementById('partnerok');
+ b.innerHTML=`<b>✅ ${v} Partner signup shuru! (Demo)</b><br>📱 Pehle upar <b>Login / Signup</b> se phone OTP verify karo, phir neeche wala form bharo — Driving Licence + Aadhaar photo upload karo, usi din delivery shuru.`;
+ b.classList.add('show');b.scrollIntoView({behavior:'smooth',block:'center'});}
+function partnerSubmit(){const n=dname.value.trim(),p=dphone.value.trim(),ln=dlicno.value.trim(),c=dcity.value.trim();
+ const bk=dbank.value.trim(),hl=dholder.value.trim(),ac=dacct.value.trim(),ifsc=difsc.value.trim().toUpperCase();
+ if(!n||!p||!ln||!c){alert('⚠️ Naam, phone, sheher aur Driving Licence number likho');return;}
+ if(p.length!==10||!/^\d+$/.test(p)){alert('⚠️ 10-digit phone number sahi likho');return;}
+ if(!dlicphoto.files.length){alert('⚠️ Driving Licence ki photo upload karo');return;}
+ if(!daadhaar.files.length){alert('⚠️ Aadhaar card ki photo upload karo');return;}
+ if(!bk||!hl){alert('⚠️ Bank ka naam aur account holder ka naam likho');return;}
+ if(!/^\d{9,18}$/.test(ac)){alert('⚠️ Bank account number sahi likho (9–18 digits)');return;}
+ if(!/^[A-Z]{4}0[A-Z0-9]{6}$/.test(ifsc)){alert('⚠️ IFSC code sahi likho (e.g. SBIN0123456)');return;}
+ const dt=new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+ const mask='XXXX-XXXX-'+ac.slice(-4);
+ const b=document.getElementById('partnerok');
+ b.innerHTML=`<b>📩 ${n}, application mil gaya!</b><br>🕐 <b>Documents check ho rahe hain</b> — DL, Aadhaar aur bank details verify ho rahi hain...<br><span style="color:#999;font-size:13px">(Demo me turant hoga — asli me 24–48 ghante lagenge)</span>`;
+ b.classList.add('show');b.scrollIntoView({behavior:'smooth',block:'center'});
+ setTimeout(()=>{showApproval(n,c,dt,bk,mask);},3500);}
+function showApproval(n,c,dt,bk,mask){const b=document.getElementById('partnerok');
+ let bonusMsg='';
+ if(!localStorage.getItem('foodel_qsr_drv_bonus')){
+  const q=parseInt(localStorage.getItem('foodel_qsr_drv')||'0')+100;
+  localStorage.setItem('foodel_qsr_drv',q);localStorage.setItem('foodel_qsr_drv_bonus','1');
+  bonusMsg=`<br>🪙 <b>Joining Bonus: +100 QSR</b> tumhare account me add ho gaye! (Total: ${q} QSR) 🎉`;}
+ b.innerHTML=`<b>✅ APPROVED! Badhai ho, ${n}! 🎉</b><br>Saare documents clear ho gaye. Foodel ki taraf se tumhara <b>Offer Letter</b> jaari ho gaya hai 👇<br>📧 Letter ki copy tumhare email/WhatsApp par bhi bheji jayegi (asli version me).${bonusMsg}`;
+ document.getElementById('offerletter').innerHTML=`
+  <div style="text-align:center;border-bottom:2px solid #b7791f;padding-bottom:10px;margin-bottom:14px">
+   <div style="font-size:30px">🍛</div><div style="font-size:26px;font-weight:800;letter-spacing:2px">FOODEL</div>
+   <div style="font-size:12px;color:#777">Swad, Ghar Tak — All India</div></div>
+  <div style="text-align:center;font-size:18px;font-weight:800;margin-bottom:12px">JOB OFFER LETTER</div>
+  <div style="font-size:13px;margin-bottom:10px">Date: ${dt}<br>Ref: FOODEL-DP-${Math.floor(100000+Math.random()*900000)}</div>
+  <p>Dear <b>${n}</b>,</p>
+  <p>🎉 <b>Welcome to the Foodel family!</b> Humein khushi hai ki tum hamare saath <b>Delivery Partner (${dveh.value})</b> ke roop me jud rahe ho — 📍 ${c}.</p>
+  <p>💪 <b>Man laga ke kaam karo</b> — customer ki khushi hamari pehchan hai. Har delivery time par, khana garam aur safe pahunchana — yahi hamara waada hai.</p>
+  <p>💰 <b>Salary / Pay:</b> Tumhari kamai har mahine tumhare bank account <b>${bk} (${mask})</b> me aayegi. Har mahine tumhare naam ki <b>payslip</b> tumhare email/phone par bhej di jayegi.</p>
+  <p>🪙 <b>QSR Coins:</b> Joining bonus ke roop me <b>100 QSR</b> tumhare account me add kar diye gaye hain — aur har delivery par <b>+10 QSR</b> milte rahenge!</p>
+  <p>📩 <b>Koi problem ho?</b> Customer Care ko email karo: <b>support@foodel.in</b> — apni request likho, hamari team aur management turant jawab dega.</p>
+  <p>🛡️ <b>Safety:</b> Helmet pehno, speed limit me chalo, khud ka aur khane ka khayal rakho.</p>
+  <p>Ek baar phir — <b>welcome aboard!</b> 🌟</p>
+  <div style="margin-top:20px;display:flex;justify-content:space-between">
+   <div><b>Managing Director</b><br>Foodel</div><div><b>CEO</b><br>Foodel</div></div>`;
+ document.getElementById('letterwrap').style.display='block';
+ document.getElementById('letterwrap').scrollIntoView({behavior:'smooth',block:'center'});}
+function printLetter(){const w=window.open('','_blank','width=700,height=800');
+ w.document.write('<html><head><title>Foodel Offer Letter</title></head><body>'+document.getElementById('offerletter').outerHTML+'</body></html>');w.document.close();w.print();}
+function regRestaurant(){const n=rname.value.trim(),o=rowner.value.trim(),p=rphone.value.trim(),m=rmenu.value.trim(),c=rcity.value;
+ if(!n){alert('🏪 Restaurant/Dhaba ka naam likho');return;}
+ if(!o){alert('👤 Owner ka naam likho');return;}
+ if(!p||p.length!==10||!/^\d+$/.test(p)){alert('📱 Owner ka 10-digit phone sahi likho');return;}
+ if(!m){alert('🍛 Kya-kya delivery karoge — menu items likho');return;}
+ if(!raadhaar.files.length){alert('🆔 Owner ke Aadhaar card ki photo upload karo');return;}
+ const b=document.getElementById('restok');
+ b.innerHTML=`<b>✅ "${n}" register ho gaya! (Demo)</b><br>👤 Owner: <b>${o}</b> · ${rtype.value} · 📍 ${c}<br>🍛 Menu: ${m.split(',').slice(0,5).join(', ')}${m.split(',').length>5?'...':''}<br>📋 Aadhaar + Business number (<b>${rbiz.value.trim()||'nahi diya'}</b>) verify hone ke baad (24–48 ghante) tumhara ${rtype.value} Foodel par LIVE hoga. Koi fee nahi!`;
+ b.classList.add('show');b.scrollIntoView({behavior:'smooth',block:'center'});}
+</script>
+</body>
+</html>
